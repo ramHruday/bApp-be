@@ -1,0 +1,1 @@
+2019-07-31 11:54:49,369 - zs_Leave - ERROR  - login.py - login: login: 31 - 'function' object has no attribute 'validate_user'
