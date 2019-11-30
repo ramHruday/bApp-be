@@ -7,6 +7,9 @@ import configparser
 import os
 import __root__
 
+
+api_service_url = "/bApp/services"
+
 # Properties file
 CONFIGURATION_FILE = os.path.join(__root__.path()+"/config/settings.conf")
 # Config file parser

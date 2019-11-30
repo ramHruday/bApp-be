@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 from bin.common import AppConfigurations
 # from bin.core.services.login import login_user
-from bin.core.services.leavesService import
+from bin.core.services import productServices
 
 # creating app
 app = Flask(__name__)
