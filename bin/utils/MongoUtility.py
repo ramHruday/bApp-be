@@ -1,14 +1,10 @@
-
-
-__author__ = 'hruday)'
-
+__author__ = 'hruday'
 
 from pymongo import MongoClient
+
 import uuid
 
-
 from bin.common.AppConstants import MongoConstants
-#
 
 
 def _decode_list(data):
@@ -34,11 +30,11 @@ def _decode_dict(data):
 
 
 class MongoUtility(object):
-    def __init__(self, mongo_host, mongo_port, user_name=None, password=None):
+    def __init__(self, url, user_name=None, password=None):
         try:
+            print(url)
             self.__mongo_OBJ__ = MongoClient(
-                host=mongo_host,
-                port=mongo_port
+                url
             )
         except Exception as e:
             print(e)
@@ -65,7 +61,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in inserting document: " + str(e))
 
-
     def insert_many(self, json_data, database_name, collection_name):
         """
         To insert multiple documents in collection
@@ -82,7 +77,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in inserting document: " + str(e))
-
 
     def find_json(self, json_data, database_name, collection_name):
         """
@@ -101,8 +95,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in finding document: " + str(e))
 
-
-
     def find_all(self, database_name, collection_name):
         """
         To find all the documents
@@ -118,8 +110,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in finding document: " + str(e))
-
-
 
     def remove(self, json_data, database_name, collection_name):
         """
@@ -138,7 +128,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in deleting document: " + str(e))
 
-
     def drop_collection(self, database_name, collection_name):
         """
         To delete collection from database
@@ -154,7 +143,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in deleting collection: " + str(e))
-
 
     def update_one(self, condition, json_data, database_name, collection_name):
         """
@@ -174,7 +162,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in updating document: " + str(e))
 
-
     def update(self, condition, json_data, database_name, collection_name):
         """
         To update single document without using set
@@ -192,7 +179,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in updating document: " + str(e))
-
 
     def update_by_removing_keys(self, condition, json_data, database_name, collection_name):
         """
@@ -212,7 +198,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in updating document: " + str(e))
 
-
     def aggregate_query(self, json_data, database_name, collection_name):
         """
         To search using aggregate query
@@ -230,7 +215,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in aggreation query: " + str(e))
 
-
     def close_connection(self):
         """
         To close the mongo connection
@@ -243,7 +227,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error during closing of connection: " + str(e))
-
 
     def find_item_containing_key_in_sub_json_object(self, condition_array, database_name, collection_name):
         """
@@ -262,7 +245,6 @@ class MongoUtility(object):
             print(e)
             # logger.error("Error in finding document: " + str(e))
 
-
     def find_item_containing_key_in_sub_json_object_list(self, condition_array, database_name, collection_name):
         """
         This function return item which contains provided JSON key inside sub json of mongodb record.
@@ -279,7 +261,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in finding document: " + str(e))
-
 
     def find_items_greater_than_date(self, datekey, value, database_name, collection_name):
         """
@@ -298,7 +279,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in finding document: " + str(e))
-
 
     @staticmethod
     def fetch_records_from_object(body):
@@ -350,7 +330,7 @@ class MongoUtility(object):
         id = str(id).replace("-", "")
         # hex_int = int(id, 16)
         # id = str(hex_int + 0x200)[:8]
-        return type+"_" + id
+        return type + "_" + id
 
     def rename_collection(self, database_name, old_name, new_name):
         """
@@ -367,7 +347,6 @@ class MongoUtility(object):
         except Exception as e:
             print(e)
             # logger.error("Error in renaming collection: " + str(e))
-
 
     def delete_key(self, key, database_name, collection_name):
         """

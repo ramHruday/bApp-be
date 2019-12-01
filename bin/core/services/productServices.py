@@ -1,31 +1,53 @@
-from flask import Flask
-from flask import request
-from flask_cors import CORS
+import json
 
+from flask import request, Blueprint
+
+from flask import request
 
 import uuid
 import json
 
-app = Flask(__name__)
+from bin.common import AppConstants
+from bin.core.handlers.product_handler import ProductHandler
 
 output_json = {
     "status": False, "message": "error"
 }
+productHandle = ProductHandler()
 
-CORS(app)
+# ---------------------------------- Flask Blueprint --------------------------------------------------
+
+product = Blueprint("product", __name__)
 
 
-@app.route("/addProduct", methods=['POST'])
-def register_function():
+# --------------------------------------- Configuration ------------------------------------------------
+
+
+@product.route(AppConstants.PRODUCT.api_create_product, methods=[AppConstants.POST])
+def create_product():
+    if request.method == 'POST':
+        try:
+            input_data = json.loads(request.get_data())
+            response = productHandle.create_product(input_data)
+            print(response)
+            return json.dumps(response)
+        except Exception as e:
+            return json.dumps(AppConstants.result_error_template(str(e)))
+    else:
+        return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
+
+
+@product.route(AppConstants.PRODUCT.api_update_product, methods=[AppConstants.POST])
+def update_product_function():
     try:
         if request.method == 'POST':
             if request.is_json:
-                input_data = request.get_json()
+                input_data = json.loads(request.get_data())
                 result = [{}]
                 print(result)
                 if result['status']:
                     output_json['status'] = True
-                    output_json['message'] = "Product added."
+                    output_json['message'] = "Leave added."
             else:
                 output_json['status'] = False
                 output_json['message'] = "error within the input data/ input not a json"
@@ -37,8 +59,8 @@ def register_function():
         return output_json
 
 
-@app.route("/updateLeave", methods=['POST'])
-def update_leave_function():
+@product.route(AppConstants.PRODUCT.api_drop_product, methods=[AppConstants.POST])
+def delete_product_function():
     try:
         if request.method == 'POST':
             if request.is_json:
@@ -59,113 +81,18 @@ def update_leave_function():
         return output_json
 
 
-@app.route("/deleteProduct", methods=['POST'])
-def disapprove_leave_function():
-    try:
-        if request.method == 'POST':
-            if request.is_json:
-                input_data = request.get_json()
-                result = [{}]
-                print(result)
-                if result['status']:
-                    output_json['status'] = True
-                    output_json['message'] = "Leave added."
-            else:
-                output_json['status'] = False
-                output_json['message'] = "error within the input data/ input not a json"
-        return output_json
-    except Exception as e:
-        output_json['status'] = False
-        output_json['data'] = None
-        output_json['message'] = str(e)
-        return output_json
-
-
-@app.route("/fetchLeaves", methods=['POST'])
-def fetch_leaves_all_function():
-    try:
-        if request.method == 'POST':
-            result = [{}]
-            if result['status']:
-                output_json["status"] = True
-                output_json["message"] = "Success"
-        return json.dumps(output_json)
-    except Exception as e:
-        output_json['status'] = False
-        output_json['data'] = None
-        output_json['message'] = str(e)
-        return output_json
-
-
-@app.route("/getEmpTeams", methods=['POST'])
-def get_emp_related_role_team():
-    try:
-        if request.method == 'POST':
-            input_data = request.get_json()
-            result = [{}]
-            if result['status']:
-                output_json["status"] = True
-                output_json["message"] = "Success"
-        return json.dumps(output_json)
-    except Exception as e:
-        output_json['status'] = False
-        output_json['data'] = None
-        output_json['message'] = str(e)
-        return output_json
-
-
-@app.route("/getEmployees", methods=['POST'])
-def get_employees():
-    try:
-        if request.method == 'POST':
-            result = [{}]
-            if result['status']:
-                output_json["status"] = True
-                output_json["message"] = "Success"
-        return json.dumps(output_json)
-    except Exception as e:
-        output_json['status'] = False
-        output_json['data'] = None
-        output_json['message'] = str(e)
-        return output_json
-
-
-@app.route("/getTeamList", methods=['POST'])
-def get_teams():
-    try:
-        if request.method == 'POST':
-            result = [{}]
-            if result['status']:
-                output_json["status"] = True
-                output_json["message"] = "Success"
-        return json.dumps(output_json)
-    except Exception as e:
-        output_json['status'] = False
-        output_json['data'] = None
-        output_json['message'] = str(e)
-        return output_json
-
-
-def create_product_id():
-    """
-    This function will create a schedulerid
-    :return: return JSON object with scheduler Id.
-    """
-    try:
-        product_id = '{0}{1}'.format('product_', generate_uuid())
-        return product_id
-    except Exception:
-        message = "Creating query id failed"
-        raise Exception(message)
-
-
-def generate_uuid():
-    """
-    :return: 5 digit UUID
-    """
-    uuid_temp = uuid.uuid4()
-    return str(uuid_temp)[:5]
-
-
-if __name__ == '__main__':
-    app.run(port=8080)
+@product.route(AppConstants.PRODUCT.api_get_products, methods=[AppConstants.GET])
+def fetch_all_products():
+    if request.method == 'GET':
+        try:
+            output_json = []
+            print(request)
+            output_json["data"] = productHandle.get_products()
+            return json.dumps(output_json)
+        except Exception as e:
+            output_json['status'] = False
+            output_json['data'] = None
+            output_json['message'] = str(e)
+            return output_json
+    else:
+        return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))

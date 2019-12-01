@@ -3,7 +3,6 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from bin.common import AppConfigurations
-# from bin.core.services.login import login_user
 from bin.core.services import productServices
 
 # creating app
@@ -11,7 +10,7 @@ app = Flask(__name__)
 
 # --------------------------------------------- REGISTER BLUEPRINTS ----------------------------------------------------
 
-app.register_blueprint(login_user)
+app.register_blueprint(productServices.product)
 
 # ---------------------------------- CORS configurations for Service endpoints -----------------------------------------
 
