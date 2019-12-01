@@ -55,13 +55,21 @@ def result_exist_template(message=None, error_type="version_exist"):
             "result": "Error while processing the request"
         }
 
+class PROJECT(object):
+    # success msgs
 
-class Notification(object):
+    # error msgs
+    NOT_PRESENT_ERROR_MSG = ":key not present in input payload!"
+    # APIs
+
+
+class PRODUCT(object):
     # Mongo Collection Info
     MONGO_PRODUCT_COLLECTION_NAME = "products"
     # Notification JSON Key
     name = "name"
     sub_type = "subType"
+    PRODUCT_ID = "product_id"
     CREATED_TIME = "CreatedTime"
     # APIs
     api_get_products = AppConfigurations.api_service_url + "/getProducts"
@@ -83,4 +91,20 @@ class Login(object):
 
     #Mongo
     MONGO_USER_DETAILS = "access_control_details"
+
+class MongoConstants(object):
+
+    # initializing status constants
+    uid_collection_name = "unique_keys"
+    unique_id_key = "unique_id"
+    doc_type_key = "doc_type"
+    success_key = "success"
+    failure_key = "failed"
+    status_key = "status"
+    result_key = "Result: "
+    error_key = "error: "
+
+    # status keys
+    success_status = {status_key: success_key, result_key: ""}
+    failed_status = {status_key: failure_key, error_key: ""}
 

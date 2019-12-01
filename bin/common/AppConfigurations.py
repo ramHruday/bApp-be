@@ -7,11 +7,12 @@ import configparser
 import os
 import __root__
 
+import urllib
 
 api_service_url = "/bApp/services"
 
 # Properties file
-CONFIGURATION_FILE = os.path.join(__root__.path()+"/config/settings.conf")
+CONFIGURATION_FILE = os.path.join(__root__.path() + "/config/settings.conf")
 # Config file parser
 parser = configparser.RawConfigParser()
 
@@ -24,9 +25,8 @@ service_host = parser.get("SERVICE", "service_host")
 service_port = int(parser.get("SERVICE", "service_port"))
 
 # Database properties
-DATABASE_NAME = parser.get('DATABASE', 'database_name')
-DATABASE_HOST = parser.get('DATABASE', 'database_host')
-DATABASE_PORT = parser.get('DATABASE', 'database_port')
+MONGO_DATABASE = parser.get('DATABASE', 'database_name')
+MONGO_HOST = "mongodb+srv://bapp:" + urllib.parse.quote("bapp123") + "@cluster0-hoio7.mongodb.net/test?retryWrites=true&w=majority"
 DATABASE_USER = parser.get('DATABASE', 'database_user')
 DATABASE_PASSWORD = parser.get('DATABASE', 'database_password')
 
