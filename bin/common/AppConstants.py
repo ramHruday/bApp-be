@@ -75,7 +75,7 @@ class PRODUCT(object):
     api_get_products = AppConfigurations.api_service_url + "/getProducts"
     api_update_product = AppConfigurations.api_service_url + "/updateProduct"
     api_create_product = AppConfigurations.api_service_url + "/createProduct"
-    api_drop_product = AppConfigurations.api_service_url + "/dropProduct"
+    api_drop_product = AppConfigurations.api_service_url + "/deleteProduct"
 
 
 class Login(object):
