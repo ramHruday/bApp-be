@@ -8,27 +8,27 @@ import uuid
 import json
 
 from bin.common import AppConstants
-from bin.core.handlers.product_handler import ProductHandler
+from bin.core.handlers.location_handler import LocationHandler
 
 output_json = {
     "status": False, "message": "error"
 }
-productHandle = ProductHandler()
+locationHandle = LocationHandler()
 
 # ---------------------------------- Flask Blueprint --------------------------------------------------
 
-product = Blueprint("product", __name__)
+location = Blueprint("location", __name__)
 
 
 # --------------------------------------- Configuration ------------------------------------------------
 
 
-@product.route(AppConstants.PRODUCT.api_create_product, methods=[AppConstants.POST])
-def create_product():
+@location.route(AppConstants.LOCATION.api_create_location, methods=[AppConstants.POST])
+def create_location():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.create_product(input_data)
+            response = locationHandle.create_location(input_data)
             print(response)
             return json.dumps(response)
         except Exception as e:
@@ -37,12 +37,12 @@ def create_product():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_update_product, methods=[AppConstants.POST])
-def update_product_function():
+@location.route(AppConstants.LOCATION.api_update_location, methods=[AppConstants.POST])
+def update_location_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.update_product(input_data)
+            response = locationHandle.update_location(input_data)
             return json.dumps(response)
         except Exception as e:
             return json.dumps(AppConstants.result_error_template(str(e)))
@@ -50,12 +50,12 @@ def update_product_function():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_drop_product, methods=[AppConstants.POST])
-def delete_product_function():
+@location.route(AppConstants.LOCATION.api_drop_location, methods=[AppConstants.POST])
+def delete_location_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.delete_product(input_data)
+            response = locationHandle.delete_location(input_data)
             return json.dumps(response)
         except Exception as e:
             return json.dumps(AppConstants.result_error_template(str(e)))
@@ -63,15 +63,15 @@ def delete_product_function():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_get_products, methods=[AppConstants.GET])
-def fetch_all_products():
+@location.route(AppConstants.LOCATION.api_get_locations, methods=[AppConstants.GET])
+def fetch_all_locations():
     if request.method == 'GET':
         try:
-            product_data = productHandle.get_products()
-            response = product_data
+            location_data = locationHandle.get_locations()
+            response = location_data
             return json.dumps(response, default=str)
         except Exception as e:
-            print(e, ': error while fetching from product service')
+            print(e, ': error while fetching from location service')
             return str(e)
     else:
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))

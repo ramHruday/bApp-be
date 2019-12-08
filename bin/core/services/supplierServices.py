@@ -8,27 +8,27 @@ import uuid
 import json
 
 from bin.common import AppConstants
-from bin.core.handlers.product_handler import ProductHandler
+from bin.core.handlers.supplier_handler import SupplierHandler
 
 output_json = {
     "status": False, "message": "error"
 }
-productHandle = ProductHandler()
+supplierHandle = SupplierHandler()
 
 # ---------------------------------- Flask Blueprint --------------------------------------------------
 
-product = Blueprint("product", __name__)
+supplier = Blueprint("supplier", __name__)
 
 
 # --------------------------------------- Configuration ------------------------------------------------
 
 
-@product.route(AppConstants.PRODUCT.api_create_product, methods=[AppConstants.POST])
-def create_product():
+@supplier.route(AppConstants.SUPPLIER.api_create_supplier, methods=[AppConstants.POST])
+def create_supplier():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.create_product(input_data)
+            response = supplierHandle.create_supplier(input_data)
             print(response)
             return json.dumps(response)
         except Exception as e:
@@ -37,12 +37,12 @@ def create_product():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_update_product, methods=[AppConstants.POST])
-def update_product_function():
+@supplier.route(AppConstants.SUPPLIER.api_update_supplier, methods=[AppConstants.POST])
+def update_supplier_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.update_product(input_data)
+            response = supplierHandle.update_supplier(input_data)
             return json.dumps(response)
         except Exception as e:
             return json.dumps(AppConstants.result_error_template(str(e)))
@@ -50,12 +50,12 @@ def update_product_function():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_drop_product, methods=[AppConstants.POST])
-def delete_product_function():
+@supplier.route(AppConstants.SUPPLIER.api_drop_supplier, methods=[AppConstants.POST])
+def delete_supplier_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
-            response = productHandle.delete_product(input_data)
+            response = supplierHandle.delete_supplier(input_data)
             return json.dumps(response)
         except Exception as e:
             return json.dumps(AppConstants.result_error_template(str(e)))
@@ -63,15 +63,15 @@ def delete_product_function():
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))
 
 
-@product.route(AppConstants.PRODUCT.api_get_products, methods=[AppConstants.GET])
-def fetch_all_products():
+@supplier.route(AppConstants.SUPPLIER.api_get_suppliers, methods=[AppConstants.GET])
+def fetch_all_suppliers():
     if request.method == 'GET':
         try:
-            product_data = productHandle.get_products()
-            response = product_data
+            supplier_data = supplierHandle.get_suppliers()
+            response = supplier_data
             return json.dumps(response, default=str)
         except Exception as e:
-            print(e, ': error while fetching from product service')
+            print(e, ': error while fetching from supplier service')
             return str(e)
     else:
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))

@@ -4,6 +4,9 @@ from flask_cors import CORS
 
 from bin.common import AppConfigurations
 from bin.core.services import productServices
+from bin.core.services import supplierServices
+from bin.core.services import locationServices
+from bin.core.services import brandServices
 
 # creating app
 app = Flask(__name__)
@@ -11,6 +14,9 @@ app = Flask(__name__)
 # --------------------------------------------- REGISTER BLUEPRINTS ----------------------------------------------------
 
 app.register_blueprint(productServices.product)
+app.register_blueprint(supplierServices.supplier)
+app.register_blueprint(locationServices.location)
+app.register_blueprint(brandServices.brand)
 
 # ---------------------------------- CORS configurations for Service endpoints -----------------------------------------
 
