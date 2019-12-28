@@ -35,3 +35,10 @@ class BPBrandException(BPException):
     Raise Exception for all the location service related errors
     """
     pass
+
+
+class BPInventoryException(BPException):
+    """
+    Raise Exception for all the location service related errors
+    """
+    pass

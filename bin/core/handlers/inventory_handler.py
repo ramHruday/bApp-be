@@ -1,10 +1,10 @@
 from bin.common import AppConfigurations
 from bin.common import AppConstants
-from bin.exception.exception import BPBrandException, BPProjectInitializationException
+from bin.exception.exception import BPInventoryException, BPProjectInitializationException
 from bin.utils.MongoUtility import MongoUtility
 
 
-class BrandHandler(object):
+class InventoryHandler(object):
     def __init__(self):
         try:
             self.mongo_db_object = MongoUtility(
@@ -13,107 +13,135 @@ class BrandHandler(object):
         except BPProjectInitializationException:
             raise BPProjectInitializationException("Exception while initializing Project Handler.")
 
-    def create_brand(self, input_json):
+    def create_inventory(self, input_json):
         try:
             print(input_json)
-            if AppConstants.BRANDS.brand_series not in input_json \
-                    or (input_json[AppConstants.BRANDS.brand_series] is None
-                        or input_json[AppConstants.BRANDS.brand_series] == ""):
-                print('brand name not present')
-                raise BPBrandException(AppConstants.BRANDS.brand_series +
-                                       AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
-            if AppConstants.BRANDS.brand_name not in input_json \
-                    or (input_json[AppConstants.BRANDS.brand_name] is None
-                        or input_json[AppConstants.BRANDS.brand_name] == ""):
-                print(AppConstants.BRANDS.brand_name + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
-                raise BPBrandException(AppConstants.BRANDS.brand_name +
-                                       AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
-            input_json[AppConstants.BRANDS.BRAND_ID] = self.mongo_db_object.UUID_generator(
-                AppConstants.BRANDS.BRAND_ID)
+            if AppConstants.INVENTORY.product_id not in input_json \
+                    or (input_json[AppConstants.INVENTORY.product_id] is None
+                        or input_json[AppConstants.INVENTORY.product_id] == ""):
+                raise BPInventoryException(AppConstants.INVENTORY.product_id +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.supplier_id not in input_json \
+                    or (input_json[AppConstants.INVENTORY.supplier_id] is None
+                        or input_json[AppConstants.INVENTORY.supplier_id] == ""):
+                raise BPInventoryException(AppConstants.INVENTORY.supplier_id +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.brand_id not in input_json \
+                    or (input_json[AppConstants.INVENTORY.brand_id] is None
+                        or input_json[AppConstants.INVENTORY.brand_id] == ""):
+                print(AppConstants.INVENTORY.brand_id + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.brand_id +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.location_id not in input_json \
+                    or (input_json[AppConstants.INVENTORY.location_id] is None
+                        or input_json[AppConstants.INVENTORY.location_id] == ""):
+                print(AppConstants.INVENTORY.location_id + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.location_id +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.kmi not in input_json \
+                    or (input_json[AppConstants.INVENTORY.kmi] is None
+                        or input_json[AppConstants.INVENTORY.kmi] == ""):
+                print(AppConstants.INVENTORY.kmi + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.kmi +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.quantity not in input_json \
+                    or (input_json[AppConstants.INVENTORY.quantity] is None
+                        or input_json[AppConstants.INVENTORY.quantity] == ""):
+                print(AppConstants.INVENTORY.quantity + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.quantity +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.mrp not in input_json \
+                    or (input_json[AppConstants.INVENTORY.mrp] is None
+                        or input_json[AppConstants.INVENTORY.mrp] == ""):
+                print(AppConstants.INVENTORY.mrp + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.mrp +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            input_json[AppConstants.INVENTORY.INVENTORY_ID] = self.mongo_db_object.UUID_generator(
+                AppConstants.INVENTORY.INVENTORY_ID)
             self.mongo_db_object.insert_one(input_json, AppConfigurations.MONGO_DATABASE,
-                                            AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME)
-            return AppConstants.result_success_template("Successfully Created a Brand")
+                                            AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME)
+            return AppConstants.result_success_template("Successfully Created a Inventory item")
         except Exception as e:
             print(e)
 
-    def get_brands(self):
+    def get_inventory(self):
         """
-        This Method is used to Get the Brands in Database
+        This Method is used to Get the Inventorys in Database
         :param input_json:
         :return:
         """
         try:
             output_json = {}
-            total_brands = list(self.mongo_db_object.find_all(AppConfigurations.MONGO_DATABASE,
-                                                              AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME))
-            output_json = total_brands
+            total_inventory = list(self.mongo_db_object.find_all(AppConfigurations.MONGO_DATABASE,
+                                                                 AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
+            output_json = total_inventory
             return AppConstants.result_success_template(output_json)
 
         except Exception as e:
-            print("Error while fetching the Brand Data.", str(e))
+            print("Error while fetching the Inventory Data.", str(e))
 
-    def update_brand(self, input_json):
+    def update_inventory(self, input_json):
         """
-        This method is used to update the brand data
-        :param input_json: brand obj,
+        This method is used to update the inventory data
+        :param input_json: inventory obj,
         :return:
         """
         try:
-            if AppConstants.BRANDS.BRAND_ID not in input_json \
-                    or (input_json[AppConstants.BRANDS.BRAND_ID] is None
-                        or input_json[AppConstants.BRANDS.BRAND_ID] == ""):
-                print(AppConstants.BRANDS.BRAND_ID + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
-                raise BPBrandException(AppConstants.BRANDS.BRAND_ID +
-                                       AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.INVENTORY_ID not in input_json \
+                    or (input_json[AppConstants.INVENTORY.INVENTORY_ID] is None
+                        or input_json[AppConstants.INVENTORY.INVENTORY_ID] == ""):
+                print(AppConstants.INVENTORY.INVENTORY_ID + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.INVENTORY_ID +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
 
-            brand_data = list(self.mongo_db_object.find_json(
-                {AppConstants.BRANDS.BRAND_ID: input_json[AppConstants.BRANDS.BRAND_ID]},
-                AppConfigurations.MONGO_DATABASE, AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME))
+            inventory_data = list(self.mongo_db_object.find_json(
+                {AppConstants.INVENTORY.INVENTORY_ID: input_json[AppConstants.INVENTORY.INVENTORY_ID]},
+                AppConfigurations.MONGO_DATABASE, AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
 
-            if brand_data:
+            if inventory_data:
                 try:
                     response = self.mongo_db_object.update_one(
-                        {AppConstants.BRANDS.BRAND_ID: input_json[AppConstants.BRANDS.BRAND_ID]},
+                        {AppConstants.INVENTORY.INVENTORY_ID: input_json[AppConstants.INVENTORY.INVENTORY_ID]},
                         input_json, AppConfigurations.MONGO_DATABASE,
-                        AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME)
-                    print("Successfully updated brand")
+                        AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME)
+                    print("Successfully updated inventory")
                 except Exception as e:
-                    print(e, 'exception in updating brand')
-                return AppConstants.result_success_template("successfully updated the brand data")
+                    print(e, 'exception in updating inventory')
+                return AppConstants.result_success_template("successfully updated the inventory data")
             else:
-                print("No Brand found with the specified ID")
-                raise BPBrandException("No Brand found with the specified ID")
+                print("No Inventory found with the specified ID")
+                raise BPInventoryException("No Inventory found with the specified ID")
         except Exception as e:
-            raise BPBrandException(e)
+            raise BPInventoryException(e)
 
-    def delete_brand(self, input_json):
+    def delete_inventory(self, input_json):
         """
-        This method is delete the brand
-        :param input_json: brand obj,
+        This method is delete the inventory
+        :param input_json: inventory obj,
         :return:
         """
         try:
-            if AppConstants.BRANDS.BRAND_ID not in input_json \
-                    or (input_json[AppConstants.BRANDS.BRAND_ID] is None
-                        or input_json[AppConstants.BRANDS.BRAND_ID] == ""):
-                print(AppConstants.BRANDS.BRAND_ID + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
-                raise BPBrandException(AppConstants.BRANDS.BRAND_ID +
-                                       AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+            if AppConstants.INVENTORY.INVENTORY_ID not in input_json \
+                    or (input_json[AppConstants.INVENTORY.INVENTORY_ID] is None
+                        or input_json[AppConstants.INVENTORY.INVENTORY_ID] == ""):
+                print(AppConstants.INVENTORY.INVENTORY_ID + AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
+                raise BPInventoryException(AppConstants.INVENTORY.INVENTORY_ID +
+                                           AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
 
-            brand_data = list(self.mongo_db_object.find_json(
-                {AppConstants.BRANDS.BRAND_ID: input_json[AppConstants.BRANDS.BRAND_ID]},
-                AppConfigurations.MONGO_DATABASE, AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME))
-            print(brand_data)
-            if brand_data:
+            inventory_data = list(self.mongo_db_object.find_json(
+                {AppConstants.INVENTORY.INVENTORY_ID: input_json[AppConstants.INVENTORY.INVENTORY_ID]},
+                AppConfigurations.MONGO_DATABASE, AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
+            print(inventory_data)
+            if inventory_data:
                 try:
-                    response = self.mongo_db_object.remove(brand_data[0], AppConfigurations.MONGO_DATABASE,
-                                                           AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME)
-                    print("Successfully deleted brand")
-                    return AppConstants.result_success_template("successfully updated the brand data")
+                    response = self.mongo_db_object.remove(inventory_data[0], AppConfigurations.MONGO_DATABASE,
+                                                           AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME)
+                    print("Successfully deleted inventory")
+                    return AppConstants.result_success_template("successfully updated the inventory data")
                 except Exception as e:
-                    print(e, 'exception in deleting brand')
+                    print(e, 'exception in deleting inventory')
             else:
-                print("No Brand found with the specified ID")
-                raise BPBrandException("No Brand found with the specified ID")
+                print("No Inventory found with the specified ID")
+                raise BPInventoryException("No Inventory found with the specified ID")
         except Exception as e:
-            raise BPBrandException(e)
+            raise BPInventoryException(e)

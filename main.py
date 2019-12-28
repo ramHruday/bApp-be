@@ -7,6 +7,7 @@ from bin.core.services import productServices
 from bin.core.services import supplierServices
 from bin.core.services import locationServices
 from bin.core.services import brandServices
+from bin.core.services import inventoryServices
 
 # creating app
 app = Flask(__name__)
@@ -17,6 +18,7 @@ app.register_blueprint(productServices.product)
 app.register_blueprint(supplierServices.supplier)
 app.register_blueprint(locationServices.location)
 app.register_blueprint(brandServices.brand)
+app.register_blueprint(inventoryServices.inventory)
 
 # ---------------------------------- CORS configurations for Service endpoints -----------------------------------------
 

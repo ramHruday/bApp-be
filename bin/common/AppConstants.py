@@ -141,6 +141,7 @@ class INVENTORY(object):
     kmi = "kmi"
     quantity = "quantity"
     mrp = "mrp"
+    INVENTORY_ID = "inventory_id"
     # APIs
     api_get_inventory = AppConfigurations.api_service_url + "/getInventory"
     api_update_inventory = AppConfigurations.api_service_url + "/updateInventory"

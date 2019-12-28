@@ -7,7 +7,7 @@ import configparser
 import os
 import __root__
 
-import urllib
+import urllib.parse
 
 api_service_url = "/bApp/services"
 
@@ -25,6 +25,7 @@ service_host = parser.get("SERVICE", "service_host")
 service_port = int(parser.get("SERVICE", "service_port"))
 
 # Database properties
+MONGO_HOST = "mongodb+srv://bapp:" + urllib.parse.quote("bapp123") + "@cluster0-hoio7.mongodb.net/test?retryWrites=true&w=majority"
 MONGO_DATABASE = parser.get('DATABASE', 'database_name')
 DATABASE_USER = parser.get('DATABASE', 'database_user')
 DATABASE_PASSWORD = parser.get('DATABASE', 'database_password')
