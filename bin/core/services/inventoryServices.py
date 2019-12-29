@@ -24,7 +24,7 @@ inventory = Blueprint("inventory", __name__)
 
 
 @inventory.route(AppConstants.INVENTORY.api_create_inventory, methods=[AppConstants.POST])
-def create_brand():
+def create_inventory():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
@@ -38,7 +38,7 @@ def create_brand():
 
 
 @inventory.route(AppConstants.INVENTORY.api_update_inventory, methods=[AppConstants.POST])
-def update_brand_function():
+def update_inventory_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
@@ -51,7 +51,7 @@ def update_brand_function():
 
 
 @inventory.route(AppConstants.INVENTORY.api_drop_inventory, methods=[AppConstants.POST])
-def delete_brand_function():
+def delete_inventory_function():
     if request.method == 'POST':
         try:
             input_data = json.loads(request.get_data())
@@ -64,14 +64,14 @@ def delete_brand_function():
 
 
 @inventory.route(AppConstants.INVENTORY.api_get_inventory, methods=[AppConstants.GET])
-def fetch_all_brands():
+def fetch_all_inventorys():
     if request.method == 'GET':
         try:
-            brand_data = inventoryHandle.get_inventory()
-            response = brand_data
+            inventory_data = inventoryHandle.get_inventory()
+            response = inventory_data
             return json.dumps(response, default=str)
         except Exception as e:
-            print(e, ': error while fetching from brand service')
+            print(e, ': error while fetching from inventory service')
             return str(e)
     else:
         return json.dumps(AppConstants.result_error_template(AppConstants.method_not_supported))

@@ -118,6 +118,9 @@ class BRANDS(object):
     brand_rep = "brand_rep"
     brand_contact = "brand_contact"
     BRAND_ID = "brand_id"
+    LAST_UPDATED = "last_updated"
+    UPDATED_BY = "updated_by"  # to be worked
+    CREATED_BY = "created_by"  # to be worked
     CREATED_TIME = "CreatedTime"
     # APIs
     api_get_brands = AppConfigurations.api_service_url + "/getBrands"
@@ -138,7 +141,7 @@ class INVENTORY(object):
     updated_at = "updated_at"
     updated_by = "updated_by"
     created_by = "created_by"
-    kmi = "kmi"
+    kmi = "kpi"
     quantity = "quantity"
     mrp = "mrp"
     INVENTORY_ID = "inventory_id"

@@ -2,6 +2,7 @@ from bin.common import AppConfigurations
 from bin.common import AppConstants
 from bin.exception.exception import BPInventoryException, BPProjectInitializationException
 from bin.utils.MongoUtility import MongoUtility
+import datetime
 
 
 class InventoryHandler(object):
@@ -58,6 +59,7 @@ class InventoryHandler(object):
                                            AppConstants.PROJECT.NOT_PRESENT_ERROR_MSG)
             input_json[AppConstants.INVENTORY.INVENTORY_ID] = self.mongo_db_object.UUID_generator(
                 AppConstants.INVENTORY.INVENTORY_ID)
+            input_json[AppConstants.INVENTORY.created_at] = datetime.datetime.now()
             self.mongo_db_object.insert_one(input_json, AppConfigurations.MONGO_DATABASE,
                                             AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME)
             return AppConstants.result_success_template("Successfully Created a Inventory item")
@@ -72,8 +74,68 @@ class InventoryHandler(object):
         """
         try:
             output_json = {}
-            total_inventory = list(self.mongo_db_object.find_all(AppConfigurations.MONGO_DATABASE,
-                                                                 AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
+            # total_inventory = list(self.mongo_db_object.find_all(AppConfigurations.MONGO_DATABASE,
+            #                                                      AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
+
+            json_query = [
+                {
+                    '$lookup': {
+                        'from': AppConstants.PRODUCT.MONGO_PRODUCT_COLLECTION_NAME,
+                        'localField': AppConstants.PRODUCT.PRODUCT_ID,
+                        'foreignField': AppConstants.PRODUCT.PRODUCT_ID,
+                        'as': "product"
+                    }
+                },
+                {
+                    '$replaceRoot': {
+                        'newRoot': {
+                            '$mergeObjects': [{'$arrayElemAt': ["$product", 0]}, "$$ROOT"]}}
+                },
+                {
+                    '$lookup': {
+                        'from': AppConstants.SUPPLIER.MONGO_SUPPLIER_COLLECTION_NAME,
+                        'localField': AppConstants.SUPPLIER.SUPPLIER_ID,
+                        'foreignField': AppConstants.SUPPLIER.SUPPLIER_ID,
+                        'as': "supplier_info"
+                    }
+                },
+                {
+                    '$replaceRoot': {
+                        'newRoot': {
+                            '$mergeObjects': [{'$arrayElemAt': ["$supplier_info", 0]}, "$$ROOT"]}}
+                },
+                {
+                    '$lookup': {
+                        'from': AppConstants.BRANDS.MONGO_BRAND_COLLECTION_NAME,
+                        'localField': AppConstants.BRANDS.BRAND_ID,
+                        'foreignField': AppConstants.BRANDS.BRAND_ID,
+                        'as': "brand"
+                    }
+                },
+                {
+                    '$replaceRoot': {
+                        'newRoot': {
+                            '$mergeObjects': [{'$arrayElemAt': ["$brand", 0]}, "$$ROOT"]}}
+                },
+                {
+                    '$lookup': {
+                        'from': AppConstants.LOCATION.MONGO_LOCATION_COLLECTION_NAME,
+                        'localField': AppConstants.LOCATION.LOCATION_ID,
+                        'foreignField': AppConstants.LOCATION.LOCATION_ID,
+                        'as': "location"
+                    }
+                },
+                {
+                    '$replaceRoot': {
+                        'newRoot': {
+                            '$mergeObjects': [{'$arrayElemAt': ["$location", 0]}, "$$ROOT"]}}
+                },
+
+                {'$project': {'product': 0, 'supplier_info': 0, 'brand': 0, 'location': 0}},
+
+            ]
+            total_inventory = list(self.mongo_db_object.aggregate_query(json_query, AppConfigurations.MONGO_DATABASE,
+                                                                        AppConstants.INVENTORY.MONGO_INVENTORY_COLLECTION_NAME))
             output_json = total_inventory
             return AppConstants.result_success_template(output_json)
 
@@ -100,6 +162,7 @@ class InventoryHandler(object):
 
             if inventory_data:
                 try:
+                    input_json[AppConstants.INVENTORY.updated_at] = datetime.datetime.now()
                     response = self.mongo_db_object.update_one(
                         {AppConstants.INVENTORY.INVENTORY_ID: input_json[AppConstants.INVENTORY.INVENTORY_ID]},
                         input_json, AppConfigurations.MONGO_DATABASE,
